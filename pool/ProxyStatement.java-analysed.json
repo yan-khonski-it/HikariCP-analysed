@@ -1,0 +1,21 @@
+{
+  "ShortSummary": "Abstract HikariCP proxy for java.sql.Statement that delegates calls, tracks transaction state, wraps ResultSets, and integrates exception and lifecycle management with ProxyConnection.",
+  "Summary": "ProxyStatement wraps a JDBC Statement and forwards operations to the delegate while adding HikariCP-specific behavior. Before any execute/update/batch/large-update call, it marks the associated ProxyConnection as commit-dirty. ResultSets (including generated keys) are wrapped into ProxyResultSet via ProxyFactory and cached to avoid recreating proxies when the underlying delegate ResultSet is unchanged. close() is synchronized, idempotent, untracks the statement from the connection, and closes the delegate with pooled exception handling via connection.checkException(). It also supports unwrap/isWrapperFor and provides a descriptive toString.",
+  "MostImportantThings": [
+    "Delegation: All Statement operations forward to the underlying delegate.",
+    "Transaction tracking: markCommitStateDirty() is called before execute/update/batch/large-update methods.",
+    "ResultSet proxying: getResultSet() and getGeneratedKeys() wrap and cache ResultSets using ProxyFactory; cache cleared when delegate returns null.",
+    "Lifecycle: close() is synchronized, idempotent, calls connection.untrackStatement(delegate), then delegate.close(), and routes SQLExceptions through connection.checkException().",
+    "Integration: getConnection() returns the ProxyConnection (not the raw JDBC connection).",
+    "Introspection: Implements isWrapperFor/unwrap to expose the underlying Statement when possible.",
+    "Diagnostics: toString() identifies the proxy and the wrapped delegate.",
+    "Thread-safety note: only close() is synchronized; other methods rely on delegate and connection behavior."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.pool.ProxyConnection (checkException, markCommitStateDirty, untrackStatement)",
+    "com.zaxxer.hikari.pool.ProxyResultSet",
+    "com.zaxxer.hikari.pool.ProxyFactory.getProxyResultSet(...)",
+    "java.sql.Statement, java.sql.ResultSet, java.sql.Connection",
+    "Other HikariCP proxies (e.g., ProxyPreparedStatement, ProxyCallableStatement) for consistent pooling behavior"
+  ]
+}

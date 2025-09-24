@@ -1,0 +1,23 @@
+{
+  "ShortSummary": "Utility to reflectively set/get bean properties, especially for HikariConfig, with type conversion (including duration units) and array parsing.",
+  "Summary": "PropertyElf applies java.util.Properties to target objects via reflection. For HikariConfig, keys prefixed with \"dataSource.\" are forwarded to addDataSourceProperty. It discovers setters, converts values to the expected parameter type (int, long with optional duration units ms/s/m/h/d to millis, short, boolean, char[], int[], String[], String), or tries to instantiate a class from a fully qualified name. It can list property names by matching getters to setters, retrieve property values via get/is, and copy Properties. It uses Locale.ENGLISH for capitalization to avoid locale issues and logs errors before throwing RuntimeException on failures.",
+  "MostImportantThings": [
+    "Special handling: keys starting with \"dataSource.\" on HikariConfig call addDataSourceProperty.",
+    "Setter resolution: finds public single-arg methods named set<Prop> or set<PROP> (uppercase fallback).",
+    "Type conversion: supports int, long (accepts values like 30s/5m → millis), short, boolean/Boolean, char[], int[], String[], and String.",
+    "String[] parsing: comma-separated with backslash escaping; throws on trailing escape.",
+    "Default fallback: if parameter type is other, tries to instantiate class named by the value using default constructor; otherwise passes raw value.",
+    "getPropertyNames: includes properties that have a no-arg getter (getX/isX) and a corresponding setter with matching type.",
+    "getProperty: tries getX then isX; returns null if not found.",
+    "copyProperties: shallow copy with key/value toString.",
+    "Locale safety: capitalization uses Locale.ENGLISH to avoid Turkish-i issues.",
+    "Errors: logs via SLF4J and throws RuntimeException when property missing or setting fails."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.HikariConfig (dataSource.* handling)",
+    "SLF4J LoggerFactory (logging)",
+    "java.lang.reflect.Method (reflection for getters/setters)",
+    "java.time.Duration and regex for parsing duration suffixes",
+    "Property value parsing helpers: parseIntArray, parseStringArray (with escaping)"
+  ]
+}

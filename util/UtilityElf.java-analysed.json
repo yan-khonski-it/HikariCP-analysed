@@ -1,0 +1,21 @@
+{
+  "ShortSummary": "Utility helpers for HikariCP: JDBC password masking, string/interrupt utilities, reflective instance creation with context classloader, single-thread executors, and transaction isolation parsing.",
+  "Summary": "Provides regex-based masking of password parameters in JDBC URLs, trimming/null handling, and a sleep helper that preserves interrupt status. Offers reflective instance creation preferring the thread context class loader and a 1x1 daemon ThreadPoolExecutor factory with pluggable rejection policy. Parses transaction isolation by name (via IsolationLevel) or numeric fallback. Includes a no-op rejection policy and a default daemon thread factory.",
+  "MostImportantThings": [
+    "maskPasswordInJdbcUrl replaces password values in JDBC URLs with <masked>.",
+    "createInstance loads via TCCL first, then UtilityElf’s class loader; picks a compatible public constructor by parameter assignability (0-arg uses declared constructor).",
+    "ThreadPoolExecutor factory: core=1, max=1, keepAlive=5s, allowCoreThreadTimeOut(true), daemon threads; optional custom ThreadFactory and RejectedExecutionHandler.",
+    "getTransactionIsolation supports names (IsolationLevel uppercased with Locale.ENGLISH) and numeric strings; returns -1 when input is null.",
+    "quietlySleep swallows InterruptedException but re-interrupts the thread.",
+    "safeIsAssignableFrom returns false if target class isn’t loadable; caution: obj null would NPE (not handled).",
+    "CustomDiscardPolicy silently drops rejected tasks; DefaultThreadFactory creates daemon threads with a fixed name.",
+    "Password masking pattern only treats the first letter of 'password' case-insensitively (matches 'password'/'Password')."
+  ],
+  "RelatedFunctionality": [
+    "HikariCP logging/redaction of JDBC URLs.",
+    "Configuration parsing (transactionIsolation) via IsolationLevel enum.",
+    "Plugin/strategy loading or custom components via reflection in multi-classloader environments.",
+    "Housekeeping/maintenance single-thread executors.",
+    "Java concurrency utilities: ThreadFactory, ThreadPoolExecutor, RejectedExecutionHandler."
+  ]
+}

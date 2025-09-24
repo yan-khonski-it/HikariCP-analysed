@@ -1,0 +1,25 @@
+{
+  "ShortSummary": "Build-time tool that uses Javassist to generate final JDBC proxy classes for HikariCP and injects factory method bodies to instantiate them.",
+  "Summary": "JavassistProxyFactory generates HikariCP proxy implementations for JDBC interfaces (Connection, Statement, PreparedStatement, CallableStatement, ResultSet, DatabaseMetaData) by creating new final classes (HikariProxy*) that extend existing Proxy* superclasses and implement all relevant interfaces. It auto-generates delegating method bodies, correctly handles SQLException wrapping via checkException, avoids methods already implemented/final in the superclass, accounts for default interface methods and concrete superclass methods, writes classes to target/classes (or a prefixed path), and patches com.zaxxer.hikari.pool.ProxyFactory methods to construct the generated proxies.",
+  "MostImportantThings": [
+    "Generates classes named Hikari<ProxyX> (e.g., HikariProxyConnection) extending com.zaxxer.hikari.pool.Proxy* classes.",
+    "Implements all interfaces of the primary JDBC type, deduplicating and skipping methods already provided as final by the superclass.",
+    "Method bodies delegate to 'delegate' with try/catch wrapping SQLException -> checkException(e); non-SQLException methods call delegate directly.",
+    "If the superclass provides a concrete implementation and the interface method is not a default method, calls super.method(...) instead of delegate.",
+    "PreparedStatement and CallableStatement paths require explicit casting of delegate; others do not.",
+    "Modifies com.zaxxer.hikari.pool.ProxyFactory to return new generated HikariProxy* instances in its factory methods.",
+    "Output directory defaults to target/classes, can be prefixed via CLI arg; classes are emitted with Java 8 classfile version.",
+    "Utilities include detection of default methods, SQLException in throws, recursive interface collection, and CtClass-to-Java Class conversion (including arrays/primitives)."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.pool.ProxyConnection",
+    "com.zaxxer.hikari.pool.ProxyStatement",
+    "com.zaxxer.hikari.pool.ProxyPreparedStatement",
+    "com.zaxxer.hikari.pool.ProxyCallableStatement",
+    "com.zaxxer.hikari.pool.ProxyResultSet",
+    "com.zaxxer.hikari.pool.ProxyDatabaseMetaData",
+    "com.zaxxer.hikari.pool.ProxyFactory",
+    "javassist (ClassPool, CtClass, CtMethod, CtNewMethod, LoaderClassPath, ClassFile)",
+    "java.sql.Connection/Statement/PreparedStatement/CallableStatement/ResultSet/DatabaseMetaData"
+  ]
+}

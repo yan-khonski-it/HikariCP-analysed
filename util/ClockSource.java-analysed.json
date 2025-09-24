@@ -1,0 +1,19 @@
+{
+  "ShortSummary": "Platform-specific time source abstraction providing opaque timestamps, conversions, elapsed-time calculations, and human-readable duration formatting.",
+  "Summary": "ClockSource offers a static, singleton-backed API for time operations. At runtime it selects MillisecondClockSource on Mac OS X (System.currentTimeMillis) and NanosecondClockSource elsewhere (System.nanoTime). It returns opaque timestamps, converts them to millis/nanos, computes elapsed time (start→now or start→end), adds milliseconds to timestamps, reports the underlying TimeUnit, and formats elapsed time into a compact string across d/h/m/s/ms/µs/ns.",
+  "MostImportantThings": [
+    "Factory picks implementation: Mac OS X uses milliseconds; other platforms use nanoseconds.",
+    "Opaque timestamps: obtain via currentTime(); convert via toMillis/toNanos.",
+    "Elapsed time helpers: elapsedMillis/elapsedNanos with start or start,end overloads.",
+    "plusMillis adds milliseconds in the source unit (nanos or millis).",
+    "getSourceTimeUnit exposes the underlying unit (MILLISECONDS or NANOSECONDS).",
+    "elapsedDisplayString formats durations across days→nanos, including negatives."
+  ],
+  "RelatedFunctionality": [
+    "Connection acquisition and validation timeouts",
+    "Leak detection timing",
+    "Housekeeping and eviction scheduling",
+    "Metrics/telemetry for pool operations",
+    "Backoff and retry timing within pool logic"
+  ]
+}

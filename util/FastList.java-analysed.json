@@ -1,0 +1,19 @@
+{
+  "ShortSummary": "Internal, array-backed List optimized for speed: no bounds checks, identity-based remove(Object), capacity-doubling; many List operations are unsupported.",
+  "Summary": "FastList is a minimal, high-performance List implementation for HikariCP. It stores elements in a typed array, doubles capacity when full, and omits range checks for speed (invalid indices cause ArrayIndexOutOfBoundsException). Supported ops include add, get, set, remove(int), removeLast(), and an iterator; remove(Object) uses identity (==) and shifts elements. Many List methods throw UnsupportedOperationException. Not thread-safe; iterator is not fail-fast. Intended for internal use only (@hidden).",
+  "MostImportantThings": [
+    "No bounds/range checking; invalid indices throw ArrayIndexOutOfBoundsException.",
+    "remove(Object) uses identity (==), scans from end, shifts array, and nulls the vacated slot.",
+    "remove(int) shifts elements and nulls the last; returns null if size == 0 (nonstandard).",
+    "Capacity grows by doubling when full; elements are stored in a typed array created via the provided Class.",
+    "Many List methods are unsupported (contains, toArray, addAll, subList, listIterator, etc.).",
+    "Not thread-safe; iterator is simple and not fail-fast.",
+    "clear() nulls references to avoid memory retention."
+  ],
+  "RelatedFunctionality": [
+    "java.util.ArrayList (contrast: bounds checks, equals-based contains/remove, broader API).",
+    "java.util.RandomAccess marker interface.",
+    "HikariCP internal collections for performance-critical paths (e.g., tracking statements/resources in pool; exact usage may vary).",
+    "Serializable support (no custom serialization logic)."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "ShortSummary": "Java enum listing database transaction isolation levels with their JDBC integer codes, including vendor-specific ones.",
+  "Summary": "IsolationLevel defines transaction isolation constants and their integer IDs (aligning with java.sql.Connection for standard levels), plus extra vendor-specific levels. getLevelId() exposes the numeric value typically passed to JDBC setTransactionIsolation.",
+  "MostImportantThings": [
+    "Maps standard JDBC isolation levels: NONE(0), READ_UNCOMMITTED(1), READ_COMMITTED(2), REPEATABLE_READ(4), SERIALIZABLE(8).",
+    "Includes vendor-specific levels: CURSOR_STABILITY(3), LAST_COMMITTED(5), SQL_SERVER_SNAPSHOT(4096).",
+    "getLevelId() returns the integer used by JDBC drivers and Connection#setTransactionIsolation.",
+    "Likely used within HikariCP to parse/apply the transactionIsolation setting; availability depends on driver support."
+  ],
+  "RelatedFunctionality": [
+    "java.sql.Connection constants and setTransactionIsolation(int)",
+    "HikariCP: HikariConfig.transactionIsolation (string-to-level mapping)",
+    "Driver-specific support: DB2 Cursor Stability/Last Committed, SQL Server SNAPSHOT isolation"
+  ]
+}

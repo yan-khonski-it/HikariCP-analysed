@@ -1,0 +1,22 @@
+{
+  "ShortSummary": "A final DataSource that opens JDBC connections using a Driver resolved by class name or JDBC URL, with safe logging and minimal features.",
+  "Summary": "DriverDataSource wraps a JDBC Driver to provide DataSource connections. It merges provided Properties with optional username/password (favoring existing values), resolves the driver by: registered drivers → context/own classloader instantiation → DriverManager by jdbcUrl, and logs the URL with masked password. getConnection delegates to Driver.connect with stored or per-call credentials. It delegates login timeout to DriverManager, exposes the driver's parent logger, and otherwise does not support wrapper/log writer features. Errors during driver resolution or URL acceptance surface as RuntimeException.",
+  "MostImportantThings": [
+    "Merges connection Properties; if username/password provided, they are used only if not already present (\"user\"/\"password\").",
+    "In getConnection(username, password), it clones properties and sets \"user\" and \"password\"; also sets \"username\" if that key already exists.",
+    "Driver resolution order: registered drivers by class name → try loading/instantiating class via TCCL then own classloader → fallback DriverManager.getDriver(jdbcUrl).",
+    "Validates that a provided driver accepts the jdbcUrl; otherwise throws RuntimeException.",
+    "Masks passwords in jdbcUrl when logging (UtilityElf.maskPasswordInJdbcUrl).",
+    "Unsupported operations: getLogWriter/setLogWriter, unwrap/isWrapperFor (unwrap throws), relying instead on DriverManager timeouts.",
+    "Thread-safe by construction (immutable fields); relies on JDBC Driver thread-safety for connect calls (typical but driver-dependent).",
+    "Uses SLF4J for logging and delegates getParentLogger to the driver."
+  ],
+  "RelatedFunctionality": [
+    "javax.sql.DataSource implementation for HikariCP when using driverClassName and jdbcUrl",
+    "java.sql.DriverManager.getDriver, getLoginTimeout, setLoginTimeout",
+    "java.sql.Driver.acceptsURL and Driver.connect",
+    "com.zaxxer.hikari.util.UtilityElf.maskPasswordInJdbcUrl",
+    "SLF4J logging (org.slf4j.Logger)",
+    "HikariCP configuration (likely used internally by HikariConfig/HikariDataSource when no vendor DataSource is provided)"
+  ]
+}

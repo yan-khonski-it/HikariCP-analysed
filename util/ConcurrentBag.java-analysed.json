@@ -1,0 +1,22 @@
+{
+  "ShortSummary": "Lock-less concurrent bag for pooling (HikariCP) using thread-local caches, a shared CopyOnWriteArrayList, and a fair SynchronousQueue for handoff; items are managed via CAS state transitions.",
+  "Summary": "ConcurrentBag manages reusable entries for a pool. Borrow first drains a per-thread cache, then CAS-scans a shared list, else waits on a fair SynchronousQueue while tracking waiter count and notifying a listener to add capacity. Returning (requite) marks NOT_IN_USE and prefers handing off to waiters before caching locally. Entries can be added, removed (only from IN_USE or RESERVED), reserved/unreserved for management operations, and inspected via snapshot methods. WeakReferences may be used in ThreadLocals when a non-system ClassLoader is detected (or via a system property). The bag never removes borrowed items from collections, so requite/remove is required to avoid leaks.",
+  "MostImportantThings": [
+    "States: NOT_IN_USE(0), IN_USE(1), REMOVED(-1), RESERVED(-2); state changes use CAS for lock-free coordination.",
+    "Borrow path: thread-local fast path -> shared list CAS scan -> SynchronousQueue handoff with waiter tracking and listener.addBagItem(waiting).",
+    "Requite must be called for borrowed items; otherwise memory leaks (items remain referenced).",
+    "Remove is only valid from IN_USE or RESERVED; otherwise warned and ignored.",
+    "Reserve/unreserve temporarily makes items unavailable/available without removal; unreserve tries to hand off to waiters.",
+    "Thread-local cache limited to 16; uses WeakReferences when a custom ClassLoader is present (or overridden by system property).",
+    "Backoff strategy: yield and short parkNanos during handoff when waiters exist; SynchronousQueue is fair (true).",
+    "Close prevents further add() and changes some warning behavior.",
+    "Potential issue: getStateCounts() indexes array by raw state (can be negative), which risks ArrayIndexOutOfBounds if RESERVED/REMOVED are present."
+  ],
+  "RelatedFunctionality": [
+    "HikariCP pool management: HikariPool/PoolEntry typically implement IConcurrentBagEntry and use ConcurrentBag.",
+    "IBagStateListener.addBagItem(waiting) signals pool to create/prepare more resources.",
+    "ClockSource.currentTime()/elapsedNanos for borrow time accounting.",
+    "FastList used as a high-performance list for thread-local cache when not using WeakReferences.",
+    "java.util.concurrent: CopyOnWriteArrayList for shared store; SynchronousQueue for fair handoff; AtomicInteger for waiter count; LockSupport.parkNanos for backoff."
+  ]
+}

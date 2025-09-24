@@ -1,0 +1,18 @@
+{
+  "ShortSummary": "A fair semaphore-based lock to suspend/resume HikariCP connection acquisition, with a no-op variant when disabled.",
+  "Summary": "SuspendResumeLock gates connection acquisition using a fair Semaphore with MAX_PERMITS=10000. Normal acquire consumes a permit; release returns it. Calling suspend acquires all permits uninterruptibly, blocking new acquires and waiting for in-flight ones to release, ensuring quiescence. resume restores permits. If the system property com.zaxxer.hikari.throwIfSuspended is true, blocked acquires throw SQLTransientException instead of waiting. A FAUX_LOCK variant is provided that no-ops when suspension is disabled.",
+  "MostImportantThings": [
+    "Fair semaphore with MAX_PERMITS=10000 controls pool acquisition flow.",
+    "acquire: tryAcquire first; else either throw (if com.zaxxer.hikari.throwIfSuspended=true) or block uninterruptibly.",
+    "suspend: acquireUninterruptibly(MAX_PERMITS) waits for all in-flight permits to return (quiescence) and then blocks new acquires.",
+    "resume: release(MAX_PERMITS) restores availability.",
+    "FAUX_LOCK: no-op implementation used when feature is disabled (avoids overhead).",
+    "Uninterruptible waits ensure consistent suspension behavior; repeated suspend/resume must be balanced."
+  ],
+  "RelatedFunctionality": [
+    "HikariCP pool suspension/resume controls",
+    "Connection acquisition gating in HikariPool/HikariDataSource",
+    "System property: com.zaxxer.hikari.throwIfSuspended",
+    "SQLTransientException signaling when acquisition is disallowed during suspension"
+  ]
+}

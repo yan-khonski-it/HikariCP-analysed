@@ -1,0 +1,16 @@
+{
+  "ShortSummary": "HikariCP interface allowing users to override how SQLExceptions trigger connection eviction from the pool.",
+  "Summary": "SQLExceptionOverride defines a hook called when a JDBC call throws SQLException. Implementations return an Override decision: CONTINUE_EVICT (use HikariCP’s built‑in SQLState/error‑code rules), DO_NOT_EVICT (suppress eviction), or MUST_EVICT (force eviction). The default implementation returns CONTINUE_EVICT.",
+  "MostImportantThings": [
+    "Purpose: customize connection eviction behavior on SQLException.",
+    "Override enum: CONTINUE_EVICT (defer to default), DO_NOT_EVICT (prevent), MUST_EVICT (force).",
+    "Default method adjudicate(SQLException) returns CONTINUE_EVICT; override to change behavior.",
+    "Decision is evaluated whenever a JDBC method throws SQLException; MUST_EVICT/DO_NOT_EVICT bypass built‑in SQLState/error‑code logic."
+  ],
+  "RelatedFunctionality": [
+    "HikariCP’s default SQLException handling based on SQLState/vendor error codes.",
+    "Connection eviction/removal and pool health management.",
+    "Configuration to register the override implementation (likely HikariConfig property such as exceptionOverrideClassName).",
+    "Error handling, retries, and connection validation/liveness checks within the pool."
+  ]
+}
