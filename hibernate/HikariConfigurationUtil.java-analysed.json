@@ -1,0 +1,17 @@
+{
+  "ShortSummary": "Utility that builds a HikariConfig from Hibernate properties by mapping common settings and translating any hibernate.hikari.* entries.",
+  "Summary": "HikariConfigurationUtil.loadConfiguration(Map) creates a Properties set for HikariConfig by mapping Hibernate AvailableSettings (isolation, autocommit, driver, url, user, pass) to HikariCP keys, then copies all properties starting with \"hibernate.hikari.\" (including dataSource.*) after stripping the prefix. It returns a new HikariConfig. Assumes String keys/values; minimal validation.",
+  "MostImportantThings": [
+    "Maps Hibernate -> HikariCP: ISOLATION->transactionIsolation, AUTOCOMMIT->autoCommit, DRIVER->driverClassName, URL->jdbcUrl, USER->username, PASS->password",
+    "Copies any \"hibernate.hikari.*\" properties to HikariConfig by removing the prefix (thus supporting dataSource.* passthrough)",
+    "Assumes Map keys/values are Strings; uses raw Map and casts (risk of ClassCastException if not Strings)",
+    "No validation or type conversion beyond direct string copy",
+    "CONFIG_PREFIX_DATASOURCE constant exists but behavior is covered by the generic prefix handling"
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.HikariConfig",
+    "org.hibernate.cfg.AvailableSettings",
+    "HikariCP dataSource.* property passthrough",
+    "Hibernate integration via a Hikari-based ConnectionProvider (e.g., HikariConnectionProvider, if present)"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "ShortSummary": "Factory that creates Prometheus-backed metrics trackers for HikariCP, registering a single HikariCPCollector per CollectorRegistry and adding pool stats per pool.",
+  "Summary": "PrometheusMetricsTrackerFactory implements MetricsTrackerFactory to integrate HikariCP metrics with Prometheus. It registers a shared HikariCPCollector exactly once per CollectorRegistry (thread-safe via ConcurrentHashMap) and, on create, adds the given pool to the collector and returns a PrometheusMetricsTracker. Default uses CollectorRegistry.defaultRegistry; a custom registry can be supplied. Note: Prometheus Summary incurs heavy locking; prefer PrometheusHistogramMetricsTrackerFactory if performance sensitive.",
+  "MostImportantThings": [
+    "Registers HikariCPCollector only once per CollectorRegistry using a thread-safe map to avoid duplicate registration.",
+    "create(...) adds the pool (name + PoolStats) to the collector and returns a PrometheusMetricsTracker.",
+    "Supports default or custom Prometheus CollectorRegistry.",
+    "Performance note: Prometheus Summary is lock-heavy; consider histogram-based factory if summaries aren’t required."
+  ],
+  "RelatedFunctionality": [
+    "HikariConfig.setMetricsTrackerFactory(...)",
+    "PrometheusHistogramMetricsTrackerFactory (alternative for performance)",
+    "HikariCPCollector (collector registered with Prometheus)",
+    "PrometheusMetricsTracker (returned tracker)",
+    "io.prometheus.client.CollectorRegistry and Collector",
+    "io.prometheus.client.Summary (lock-heavy warning)"
+  ]
+}

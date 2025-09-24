@@ -1,0 +1,28 @@
+{
+  "ShortSummary": "Configuration class for HikariCP connection pools, with defaults, validation, runtime-tunable MXBean fields, metrics/health integration, and sealing after startup.",
+  "Summary": "HikariConfig encapsulates all settings for a HikariCP pool. It supports configuration via constructors, properties files (filesystem or classpath), or setters. Some fields are changeable at runtime via the MXBean (timeouts, sizes, catalog, credentials), while most are sealed once the pool starts. The class validates mutually exclusive/required data source options (DataSource, dataSourceClassName, jdbcUrl, driverClassName/JNDI), enforces numeric constraints (timeouts, lifetimes, keepalive, leak detection), generates a pool name, and logs a masked configuration snapshot. It integrates with Dropwizard/Micrometer metrics and Codahale HealthCheckRegistry (mutually exclusive factory/registry), supports credentials via username/password or a HikariCredentialsProvider, optional SQLException override logic, JMX registration, and custom executors/thread factories. It also offers JNDI lookups for registries and copyStateTo for cloning config.",
+  "MostImportantThings": [
+    "Runtime-adjustable via MXBean: catalog, connectionTimeout, validationTimeout, idleTimeout, leakDetectionThreshold, maxLifetime, maxPoolSize, minIdle, credentials.",
+    "Sealing: most setters throw if called after pool start; use HikariConfigMXBean for supported runtime changes.",
+    "Data source selection rules: use exactly one of dataSource, dataSourceClassName, jdbcUrl (or JNDI). driverClassName cannot be used with dataSourceClassName; driverClassName requires jdbcUrl.",
+    "Numeric constraints: min timeout floor 250ms; maxLifetime >= 30s (unless 0); keepalive >= 30s and < maxLifetime; leakDetectionThreshold disabled if <2s or >maxLifetime; idleTimeout disabled/adjusted if near > maxLifetime or <10s when pool is elastic; fixed-size pools ignore idleTimeout.",
+    "Defaults: maxPoolSize=10, maxLifetime=30m, idleTimeout=10m, connectionTimeout=30s, validationTimeout=5s, autoCommit=true, keepaliveTime=2m (note: Javadoc says default 0; likely outdated).",
+    "Metrics/health: setMetricRegistry or setMetricsTrackerFactory (mutually exclusive). Supports com.codahale.metrics MetricRegistry, io.dropwizard.metrics5 MetricRegistry, or io.micrometer MeterRegistry; health checks support Codahale HealthCheckRegistry only.",
+    "Credentials: atomic username/password via Credentials; optional HikariCredentialsProvider to fetch at runtime.",
+    "Exception handling: optional SQLExceptionOverride class/instance to classify SQLExceptions.",
+    "Housekeeping and threads: custom ScheduledExecutorService and ThreadFactory supported.",
+    "Other behaviors: pool name auto-generated and must not contain ':' if JMX-registered; property logging masks passwords and JDBC URL secrets; supports JNDI lookup for registry objects.",
+    "Potential issues: setCredentialsProviderClassName stores to exceptionOverrideClassName (likely a bug); keepalive Javadoc says default 0 but code sets 2 minutes."
+  ],
+  "RelatedFunctionality": [
+    "HikariDataSource (startup, uses HikariConfig)",
+    "HikariConfigMXBean and HikariPoolMXBean (runtime changes, JMX)",
+    "HikariCredentialsProvider (runtime credentials)",
+    "SQLExceptionOverride (custom SQL exception handling)",
+    "MetricsTrackerFactory and MetricRegistry/MeterRegistry (Dropwizard 3/5, Micrometer)",
+    "HealthCheckRegistry (Codahale/Dropwizard health checks)",
+    "javax.sql.DataSource and java.sql.Driver integration",
+    "PropertyElf and UtilityElf (property binding, masking, helpers)",
+    "JNDI lookups for registries/external objects"
+  ]
+}

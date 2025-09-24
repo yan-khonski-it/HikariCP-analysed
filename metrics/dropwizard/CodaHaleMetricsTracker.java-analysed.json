@@ -1,0 +1,19 @@
+{
+  "ShortSummary": "Dropwizard (Codahale) metrics tracker for a HikariCP pool that registers timers, histograms, meters, and gauges in a MetricRegistry and cleans them up on close.",
+  "Summary": "CodaHaleMetricsTracker integrates HikariCP with Dropwizard Metrics. For a given pool name, it registers: a Timer for connection acquisition wait time (nanos), Histograms for connection usage duration (millis) and connection creation time (millis), a Meter for connection timeouts, and Gauges reflecting PoolStats (total/idle/active/pending/max/min connections). It provides record* methods invoked by HikariCP to update metrics and removes all metrics from the registry when closed.",
+  "MostImportantThings": [
+    "Registers and names metrics per pool using DropwizardCommon constants and MetricRegistry.name(poolName, ...).",
+    "Measures acquisition in nanoseconds (Timer), usage and creation in milliseconds (Histograms), and timeout events via Meter.mark().",
+    "Exposes Gauges for PoolStats: total, idle, active, pending threads, max, and min connections.",
+    "Implements lifecycle: all metrics are removed from the registry in close() to prevent leaks and name collisions.",
+    "Provides getters for underlying Timer/Histograms for external inspection/testing."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.metrics.IMetricsTracker",
+    "com.zaxxer.hikari.metrics.PoolStats",
+    "com.zaxxer.hikari.metrics.dropwizard.DropwizardCommon",
+    "com.codahale.metrics.MetricRegistry, Timer, Histogram, Meter, Gauge",
+    "HikariCP Dropwizard/Codahale metrics integration (e.g., DropwizardMetricsTrackerFactory)",
+    "HikariConfig metricRegistry setup (supplying MetricRegistry to HikariCP)"
+  ]
+}

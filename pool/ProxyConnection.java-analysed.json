@@ -1,0 +1,22 @@
+{
+  "ShortSummary": "ProxyConnection wraps a JDBC Connection for HikariCP, tracking state, managing statements and leaks, and evicting broken connections.",
+  "Summary": "An abstract Connection proxy that delegates to a real JDBC Connection while integrating with HikariCP's PoolEntry. It tracks mutable connection state (auto-commit, read-only, isolation, catalog, schema, network timeout) via dirty bits for efficient reset on close. It monitors open Statements, auto-closes them on close, and integrates with a leak detection task. It marks commit state dirty during transactional operations and auto-rolls back on close if needed. Exceptions are inspected (SQLState, error codes, and an override hook) to evict broken connections. After use, it recycles the PoolEntry and replaces the delegate with a sentinel ClosedConnection.",
+  "MostImportantThings": [
+    "Tracks and caches connection state changes with dirty bits; resets state via PoolEntry.resetConnectionState on close.",
+    "Maintains and closes all open Statements; statement close errors can trigger eviction.",
+    "Commit-state tracking: auto-rollback on close if in a non-autocommit transaction with dirty state.",
+    "Robust exception handling: inspects SQLState (08*, known states), error codes, and SQLExceptionOverride to evict broken connections.",
+    "Leak detection integration: cancels ProxyLeakTask on close or eviction.",
+    "Returns proxy-wrapped Statement/PreparedStatement/CallableStatement/DatabaseMetaData via ProxyFactory.",
+    "Uses a ClosedConnection proxy sentinel after close/eviction to enforce closed behavior."
+  ],
+  "RelatedFunctionality": [
+    "PoolEntry: resetConnectionState, recycle, evict, poolName, isMarkedEvicted, getPoolBase().exceptionOverride",
+    "ProxyLeakTask: leak detection cancellation",
+    "ProxyFactory: creation of proxy Statement/PreparedStatement/CallableStatement/DatabaseMetaData",
+    "FastList<Statement>: tracking of open statements",
+    "SQLExceptionOverride adjudication (CONTINUE_EVICT, DO_NOT_EVICT, MUST_EVICT)",
+    "Error handling rules: SQLState prefix '08', specific states (0A000, 57P01, 57P02, 57P03, 01002, JZ0C0, JZ0C1) and codes (500150, 2399, 1105)",
+    "ClosedConnection dynamic proxy to represent a closed/invalid connection"
+  ]
+}

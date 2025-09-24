@@ -1,0 +1,22 @@
+{
+  "ShortSummary": "Factory that creates HikariCP metrics trackers backed by Dropwizard Metrics v5.",
+  "Summary": "Dropwizard5MetricsTrackerFactory integrates HikariCP with Dropwizard Metrics 5 by holding a MetricRegistry and producing Dropwizard5MetricsTracker instances per pool. It implements MetricsTrackerFactory, returning IMetricsTracker objects configured with the pool name, PoolStats, and the provided registry. Typically passed to HikariConfig.setMetricsTrackerFactory to enable Dropwizard v5 metrics collection.",
+  "MostImportantThings": [
+    "Implements MetricsTrackerFactory and returns IMetricsTracker instances.",
+    "Requires an io.dropwizard.metrics5.MetricRegistry via constructor; stored as final.",
+    "create(poolName, poolStats) builds Dropwizard5MetricsTracker(poolName, poolStats, registry).",
+    "Provides getRegistry() accessor.",
+    "Targets Dropwizard Metrics v5 specifically; ensure matching dependency.",
+    "Stateless beyond the registry reference; safe to share.",
+    "No null checks; callers should provide non-null registry, poolName, and poolStats."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.metrics.dropwizard.Dropwizard5MetricsTracker",
+    "com.zaxxer.hikari.metrics.MetricsTrackerFactory",
+    "com.zaxxer.hikari.metrics.IMetricsTracker",
+    "com.zaxxer.hikari.metrics.PoolStats",
+    "io.dropwizard.metrics5.MetricRegistry",
+    "com.zaxxer.hikari.HikariConfig#setMetricsTrackerFactory",
+    "Other variants (if present): MicrometerMetricsTrackerFactory, Dropwizard (pre-v5) factories"
+  ]
+}

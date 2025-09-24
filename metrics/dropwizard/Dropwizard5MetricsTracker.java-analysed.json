@@ -1,0 +1,19 @@
+{
+  "ShortSummary": "HikariCP metrics tracker using Dropwizard Metrics 5 that registers and records pool metrics (timers, histograms, meter, gauges) and cleans them up on close.",
+  "Summary": "Dropwizard5MetricsTracker implements IMetricsTracker for a HikariCP pool. It wires a MetricRegistry to: track connection acquisition time via a Timer (nanos), connection usage duration via a Histogram (millis), connection creation time via a Histogram (millis), and connection timeouts via a Meter. It also registers Gauges for total, idle, active, pending, max, and min connections derived from PoolStats. Metric names are composed from poolName + category + specific metric constants from DropwizardCommon. The close() method removes all registered metrics. Public getters expose the Timer and Histograms.",
+  "MostImportantThings": [
+    "Uses io.dropwizard.metrics5 (v5) API: Timer, Histogram, Meter, Gauge, MetricRegistry.",
+    "Records: acquire time (nanos -> Timer), usage time (millis -> Histogram), creation time (millis -> Histogram), timeouts (Meter.mark).",
+    "Registers Gauges for pool size/state: total, idle, active, pending, max, min via PoolStats.",
+    "Metric names are namespaced by poolName and DropwizardCommon constants (ensures consistent naming).",
+    "close() removes all metrics it registered to avoid leaks/duplication.",
+    "Provides getters for acquisition Timer and duration/creation Histograms."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.metrics.IMetricsTracker",
+    "com.zaxxer.hikari.metrics.PoolStats",
+    "com.zaxxer.hikari.metrics.dropwizard.DropwizardCommon (metric name constants)",
+    "io.dropwizard.metrics5.MetricRegistry, Timer, Histogram, Meter, Gauge",
+    "HikariCP metrics integration via Dropwizard (e.g., supplying a MetricRegistry in configuration)"
+  ]
+}

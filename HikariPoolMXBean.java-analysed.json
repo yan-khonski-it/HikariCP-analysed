@@ -1,0 +1,19 @@
+{
+  "ShortSummary": "JMX MBean interface for HikariCP pools exposing real-time metrics and control operations (eviction, suspend/resume).",
+  "Summary": "Defines HikariPoolMXBean, a management/monitoring interface exposing point-in-time metrics (idle, active, total connections, and threads waiting) and control methods. Values are transient; sums may not match. softEvictConnections evicts idle connections now and marks active ones for eviction on return. suspendPool blocks DataSource#getConnection() indefinitely until resumePool is called, and suspension features require HikariConfig.allowPoolSuspension=true.",
+  "MostImportantThings": [
+    "Metrics methods: getIdleConnections, getActiveConnections, getTotalConnections, getThreadsAwaitingConnection (all are transient/point-in-time).",
+    "Control methods: softEvictConnections, suspendPool, resumePool.",
+    "Sum of idle + active may differ from total due to timing.",
+    "suspendPool blocks DataSource#getConnection() with no timeout until resumePool.",
+    "Pool suspension requires HikariConfig#setAllowPoolSuspension(true).",
+    "softEvict evicts idle immediately and flags active for eviction upon return."
+  ],
+  "RelatedFunctionality": [
+    "HikariConfig#setAllowPoolSuspension(boolean)",
+    "javax.sql.DataSource#getConnection()",
+    "JMX exposure as javax.management MBean",
+    "HikariCP pool monitoring and lifecycle control",
+    "Implementations (e.g., HikariPool/HikariDataSource) providing this MXBean"
+  ]
+}

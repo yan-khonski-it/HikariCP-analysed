@@ -1,0 +1,17 @@
+{
+  "ShortSummary": "Utility class centralizing Dropwizard metric category and metric name constants for HikariCP’s connection pool.",
+  "Summary": "DropwizardCommon is a non-instantiable final class that defines constant strings for HikariCP Dropwizard metrics. It standardizes metric names (e.g., Wait, Usage, ConnectionCreation, ConnectionTimeoutRate, and connection counts) under the \"pool\" category for consistent registration and lookup in a Dropwizard (Codahale) MetricRegistry.",
+  "MostImportantThings": [
+    "Final class with private constructor (non-instantiable utility).",
+    "Defines METRIC_CATEGORY = \"pool\".",
+    "Defines metric name constants: Wait, Usage, ConnectionCreation, ConnectionTimeoutRate.",
+    "Defines connection state metrics: Total, Idle, Active, Pending, Max, Min.",
+    "Ensures consistent metric naming across Dropwizard/HikariCP integration."
+  ],
+  "RelatedFunctionality": [
+    "HikariCP Dropwizard integration (e.g., DropwizardMetricsTracker, DropwizardMetricsTrackerFactory).",
+    "Codahale/Dropwizard MetricRegistry registration and lookup.",
+    "HikariConfig/HikariDataSource metricsTrackerFactory configuration.",
+    "Pool performance/health metrics (timers, gauges, counters) for monitoring."
+  ]
+}

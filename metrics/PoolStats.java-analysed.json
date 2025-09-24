@@ -1,0 +1,17 @@
+{
+  "ShortSummary": "Abstract, thread-safe stats container for HikariCP that lazily refreshes pool metrics at most once per timeout interval.",
+  "Summary": "PoolStats defines volatile counters for pool state (total, idle, active, pending threads, max, min) and exposes getters that refresh values via an abstract update() method. Refreshes are throttled using an AtomicLong (reloadAt) with a CAS loop and ClockSource timestamps, ensuring only one thread performs an update per timeoutMs window while others read cached values.",
+  "MostImportantThings": [
+    "Abstract class; subclasses must implement update() to set all metric fields.",
+    "Refresh is rate-limited per timeoutMs using AtomicLong CAS on reloadAt.",
+    "Getters trigger update only when the cached values are expired; otherwise return cached values.",
+    "All metrics stored as volatile ints: totalConnections, idleConnections, activeConnections, pendingThreads, maxConnections, minConnections.",
+    "Uses ClockSource.currentTime/plusMillis; no external locks (lightweight, concurrent).",
+    "update() should be fast and set fields consistently to avoid prolonged stale reads."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.util.ClockSource",
+    "HikariCP metrics/monitoring integrations (e.g., MetricsTracker/MetricsTrackerFactory; specific registries depend on build) [some details may vary]",
+    "HikariPool state and sizing (source of values for update())"
+  ]
+}

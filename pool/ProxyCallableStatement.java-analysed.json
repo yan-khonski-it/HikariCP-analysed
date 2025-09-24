@@ -1,0 +1,18 @@
+{
+  "ShortSummary": "Abstract proxy wrapper for JDBC CallableStatement in HikariCP, extending ProxyPreparedStatement.",
+  "Summary": "Defines a base class for proxying java.sql.CallableStatement instances. It ties a ProxyConnection to an underlying CallableStatement and delegates behavior via the parent ProxyPreparedStatement. No CallableStatement methods are overridden here; interception/management is likely handled in the superclass or generated subclasses.",
+  "MostImportantThings": [
+    "Extends ProxyPreparedStatement and implements CallableStatement.",
+    "Constructor wires a ProxyConnection with an underlying CallableStatement.",
+    "Contains no explicit overrides; behavior is inherited or provided by generated proxies.",
+    "Purpose: enable interception/resource management for stored procedure calls within the pool."
+  ],
+  "RelatedFunctionality": [
+    "ProxyPreparedStatement",
+    "ProxyStatement",
+    "ProxyConnection",
+    "HikariProxyCallableStatement (generated subclass, if present)",
+    "Statement lifecycle management (close, timeout, cancellation)",
+    "Resource/leak tracking and metrics within HikariCP"
+  ]
+}

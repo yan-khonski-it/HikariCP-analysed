@@ -1,0 +1,20 @@
+{
+  "ShortSummary": "Prometheus metrics tracker for HikariCP that uses Histograms instead of Summaries to avoid lock contention; records per-pool durations and timeouts and registers metrics once per CollectorRegistry.",
+  "Summary": "PrometheusHistogramMetricsTracker implements IMetricsTracker and reports HikariCP metrics using Prometheus Histograms and a Counter, labeled by pool. It observes connection acquisition time (ns), usage time (ms), creation time (ms), and increments a timeout counter. Metrics are registered once per CollectorRegistry using a ConcurrentHashMap sentinel to avoid duplicate registration, and per-pool time series are removed on close. Histograms use exponential buckets (start, factor 2.0, 11 buckets) and are static, with per-pool Child instances.",
+  "MostImportantThings": [
+    "Uses Histogram (not Summary) to avoid heavy locks in Prometheus client.",
+    "Metrics: hikaricp_connection_acquired_nanos (ns), hikaricp_connection_usage_millis (ms), hikaricp_connection_creation_millis (ms), and hikaricp_connection_timeout_total (counter).",
+    "All metrics labeled by \"pool\"; per-pool Child instances are managed and removed in close().",
+    "Registers metrics only once per CollectorRegistry via a ConcurrentHashMap of RegistrationStatus to prevent duplicate registration.",
+    "Histogram buckets: exponentialBuckets(start, 2.0, 11); start=1000 ns for acquired, start=1 ms for usage/creation.",
+    "Timeouts increment a Counter; durations are observed directly in the configured units.",
+    "Depends on HikariCPCollector to remove pool-level metrics on close."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.metrics.prometheus.PrometheusMetricsTracker (Summary-based alternative)",
+    "com.zaxxer.hikari.metrics.prometheus.PrometheusMetricsTrackerFactory (registration and construction)",
+    "com.zaxxer.hikari.metrics.prometheus.HikariCPCollector",
+    "com.zaxxer.hikari.metrics.IMetricsTracker",
+    "io.prometheus.client: CollectorRegistry, Counter, Histogram"
+  ]
+}

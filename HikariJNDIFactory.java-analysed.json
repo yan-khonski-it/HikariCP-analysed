@@ -1,0 +1,20 @@
+{
+  "ShortSummary": "JNDI ObjectFactory that builds HikariDataSource from a JNDI Reference, optionally wrapping an existing JNDI DataSource.",
+  "Summary": "HikariJNDIFactory inspects a javax.naming.Reference targeting javax.sql.DataSource, extracts HikariConfig and dataSource.* properties, and constructs a HikariDataSource. If the property dataSourceJNDI is present, it looks up the target DataSource via the provided Context (or a new InitialContext) and wraps it in HikariCP using HikariConfig. Otherwise, it creates a HikariDataSource directly from the gathered properties. getObjectInstance is synchronized; failures to find a Context when dataSourceJNDI is set result in a RuntimeException; if the JNDI lookup yields no DataSource, null is returned.",
+  "MostImportantThings": [
+    "Handles only Reference objects with className 'javax.sql.DataSource'.",
+    "Collects properties whose names start with 'dataSource.' or match HikariConfig properties via PropertyElf.",
+    "If 'dataSourceJNDI' is set, looks up an existing DataSource and wraps it with HikariCP; otherwise builds a standalone HikariDataSource.",
+    "Two-step JNDI lookup: provided Context first, then new InitialContext as fallback.",
+    "Thread-safety: getObjectInstance is synchronized.",
+    "Error behavior: throws RuntimeException if Context is missing when 'dataSourceJNDI' is specified; returns null if lookup fails; otherwise may throw NamingException upstream."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.HikariConfig (configuration properties consumed, including pool settings and 'dataSource.*')",
+    "com.zaxxer.hikari.HikariDataSource (the produced pooled DataSource)",
+    "com.zaxxer.hikari.util.PropertyElf (discovers valid HikariConfig property names)",
+    "javax.naming.spi.ObjectFactory and javax.naming.Reference (JNDI integration point)",
+    "javax.naming.Context / InitialContext.lookup (JNDI resolution)",
+    "JNDI resource definitions in app servers (e.g., Tomcat, Jetty, JBoss) that supply the Reference"
+  ]
+}

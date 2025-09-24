@@ -1,0 +1,18 @@
+{
+  "ShortSummary": "Factory that produces Dropwizard (Codahale) metrics trackers for HikariCP using a provided MetricRegistry.",
+  "Summary": "CodahaleMetricsTrackerFactory implements MetricsTrackerFactory and encapsulates a Dropwizard MetricRegistry. It creates CodaHaleMetricsTracker instances for specific HikariCP pools (identified by poolName) and their PoolStats, enabling integration of HikariCP metrics with Dropwizard.",
+  "MostImportantThings": [
+    "Implements MetricsTrackerFactory for HikariCP metrics integration.",
+    "Holds a MetricRegistry injected via constructor; accessible through getRegistry().",
+    "create(poolName, poolStats) returns a CodaHaleMetricsTracker bound to the same MetricRegistry.",
+    "Enables wiring HikariCP pool metrics into Dropwizard/Codahale metrics."
+  ],
+  "RelatedFunctionality": [
+    "com.codahale.metrics.MetricRegistry",
+    "com.zaxxer.hikari.metrics.IMetricsTracker",
+    "com.zaxxer.hikari.metrics.MetricsTrackerFactory",
+    "com.zaxxer.hikari.metrics.PoolStats",
+    "com.zaxxer.hikari.metrics.dropwizard.CodaHaleMetricsTracker",
+    "HikariCP metrics configuration that accepts a MetricsTrackerFactory"
+  ]
+}

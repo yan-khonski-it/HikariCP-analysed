@@ -1,0 +1,19 @@
+{
+  "ShortSummary": "Factory that creates Prometheus histogram-based metrics trackers for HikariCP, registering a shared collector once per CollectorRegistry.",
+  "Summary": "PrometheusHistogramMetricsTrackerFactory implements MetricsTrackerFactory to expose HikariCP metrics as Prometheus histograms. By default it registers metrics to CollectorRegistry.defaultRegistry, or to a provided registry. On create(poolName, poolStats), it ensures the HikariCPCollector is registered (once per registry), adds the pool to the collector, and returns a PrometheusHistogramMetricsTracker.",
+  "MostImportantThings": [
+    "Registers HikariCPCollector only once per CollectorRegistry using a static ConcurrentHashMap to avoid duplicate registration errors.",
+    "Defaults to CollectorRegistry.defaultRegistry; custom registries are supported via constructor.",
+    "create(...) adds the pool to the collector and returns a PrometheusHistogramMetricsTracker bound to that collector/registry.",
+    "Potential caveat: multiple factory instances targeting the same registry may result in only the first instance's collector being registered; others may not be exported unless HikariCPCollector shares state internally (uncertain)."
+  ],
+  "RelatedFunctionality": [
+    "PrometheusHistogramMetricsTracker",
+    "HikariCPCollector",
+    "PrometheusMetricsTrackerFactory.RegistrationStatus (REGISTERED)",
+    "io.prometheus.client.CollectorRegistry (defaultRegistry)",
+    "io.prometheus.client.Collector",
+    "com.zaxxer.hikari.metrics.IMetricsTracker",
+    "com.zaxxer.hikari.metrics.PoolStats"
+  ]
+}

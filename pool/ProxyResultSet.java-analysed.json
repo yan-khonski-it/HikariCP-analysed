@@ -1,0 +1,19 @@
+{
+  "ShortSummary": "Abstract HikariCP proxy for java.sql.ResultSet that delegates to a real ResultSet while integrating with ProxyConnection/ProxyStatement to track transaction state and support JDBC unwrap/wrapper semantics.",
+  "Summary": "ProxyResultSet wraps a JDBC ResultSet, holding references to a ProxyConnection and ProxyStatement. It returns the proxy statement from getStatement(), marks the connection's commit state as dirty before mutating operations (updateRow, insertRow, deleteRow), and delegates those calls to the underlying ResultSet. It implements JDBC wrapper methods (isWrapperFor/unwrap) to expose the underlying vendor ResultSet when requested. toString provides a concise identity plus delegate info. The checkException method routes SQLExceptions to connection.checkException for standardized handling (likely used by subclasses).",
+  "MostImportantThings": [
+    "Acts as a base proxy for ResultSet; maintains linkage to ProxyConnection and ProxyStatement.",
+    "Marks transaction/commit state dirty on updateRow/insertRow/deleteRow before delegating.",
+    "getStatement() returns the proxy statement (not the raw underlying statement).",
+    "Supports JDBC unwrap/isWrapperFor to access the underlying vendor ResultSet.",
+    "checkException delegates exception handling to the connection; may be used by subclasses.",
+    "Provides a descriptive toString including identity and delegate."
+  ],
+  "RelatedFunctionality": [
+    "ProxyConnection.markCommitStateDirty and ProxyConnection.checkException",
+    "ProxyStatement (returned by getStatement)",
+    "HikariCP proxy layer for JDBC objects (e.g., ProxyPreparedStatement/ProxyCallableStatement)",
+    "JDBC ResultSet mutating operations and transaction semantics",
+    "JDBC Wrapper/unwrap API compliance"
+  ]
+}

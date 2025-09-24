@@ -1,0 +1,26 @@
+{
+  "ShortSummary": "Primary HikariCP connection pool implementation managing acquisition, lifecycle, eviction, metrics, and housekeeping of JDBC connections.",
+  "Summary": "HikariPool coordinates creating, borrowing, and recycling JDBC connections using a ConcurrentBag, scheduled housekeeping, and configurable timeouts. It supports fail-fast startup, suspend/resume, soft eviction, keepalive and max-lifetime retirement with variance, leak detection, and metrics/health-check integration. Connections are validated, timed-out with detailed SQL state propagation, and maintained to minimum idle levels while respecting maximum pool size.",
+  "MostImportantThings": [
+    "Pool states and control: POOL_NORMAL, POOL_SUSPENDED, POOL_SHUTDOWN; suspendResumeLock enforces suspend/resume.",
+    "Acquisition path: getConnection waits up to connectionTimeout, borrows from ConcurrentBag, validates liveness (with aliveBypassWindowMs), records metrics, and optionally beginRequest/endRequest.",
+    "Lifecycle tasks: HouseKeeper trims idle (idleTimeout), maintains minimum idle, detects clock anomalies; MaxLifetimeTask retires connections with randomized variance; KeepaliveTask validates reserved connections.",
+    "Eviction: softEvictConnection marks or closes immediately if owner or reservable; eviction paths for dead/idle/maxLifetime/explicit user evict.",
+    "Creation strategy: PoolEntryCreator backs off exponentially, fills to minimumIdle, respects maximumPoolSize, and supports optional blockUntilFilled on startup.",
+    "Shutdown: cancels housekeeping, soft-evicts, aborts in-use connections via assassin executor, closes all connections, and shuts down executors safely.",
+    "Metrics and health: pluggable MetricsTrackerFactory or registries (Dropwizard, Micrometer), PoolStats snapshot, optional Dropwizard health checks.",
+    "Configuration levers: HikariConfig (timeouts, sizes, keepalive, maxLifetime, minIdle), and system properties (aliveBypassWindowMs, housekeeping.periodMs, lifeTimeVarianceFactor, enableRequestBoundaries, blockUntilFilled).",
+    "Concurrency: separate executors for adding/closing/aborting connections, bag reserve/unreserve semantics, and careful logging/state checks."
+  ],
+  "RelatedFunctionality": [
+    "PoolBase (base behaviors: newPoolEntry, validation, isConnectionDead, timing)",
+    "ConcurrentBag and IBagStateListener (borrow/requite/reserve/unreserve, waiting thread counts)",
+    "PoolEntry and ProxyConnection (wrapping, leak task, request boundaries)",
+    "ProxyLeakTaskFactory (leak detection scheduling)",
+    "Metrics: MetricsTrackerFactory, MetricsTrackerDelegate, NopMetricsTrackerDelegate, PoolStats",
+    "HikariConfig/HikariDataSource (configuration, evictConnection API)",
+    "Health checks: com.zaxxer.hikari.metrics.dropwizard.CodahaleHealthChecker integration",
+    "Utilities: ClockSource (timing), UtilityElf (thread factory, quiet close), SuspendResumeLock",
+    "System properties: com.zaxxer.hikari.aliveBypassWindowMs, com.zaxxer.hikari.housekeeping.periodMs, com.zaxxer.hikari.lifeTimeVarianceFactor, com.zaxxer.hikari.enableRequestBoundaries, com.zaxxer.hikari.blockUntilFilled"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "ShortSummary": "HikariDataSource is HikariCP’s pooled DataSource, supporting eager or lazy pool initialization, lifecycle control, and delegation to the underlying JDBC DataSource.",
+  "Summary": "Extends HikariConfig and implements DataSource/Closeable. If constructed with HikariConfig, validates, starts HikariPool immediately (fastPathPool) and seals configuration. Default constructor defers pool creation until first getConnection() using double-checked locking, then validates, starts the pool, and seals config. Delegates LogWriter/LoginTimeout and unwrap/isWrapperFor to the underlying unwrapped DataSource when available. getConnection(username,password) and getParentLogger are unsupported. MXBean setters (metric registry, metrics tracker factory, health check registry) may be applied post-start exactly once; otherwise IllegalStateException. Lifecycle: isRunning checks pool state, evictConnection removes Hikari-managed connections, close() is idempotent, logs shutdown, and handles interruption.",
+  "MostImportantThings": [
+    "Two init paths: eager (constructor with HikariConfig) vs. lazy (default constructor + first getConnection()); fastPathPool optimizes eager path.",
+    "getConnection(): throws if closed; lazy path uses double-checked locking; rethrows underlying SQLExceptions from pool init.",
+    "Configuration is sealed after pool start; further changes only via specific MXBean methods.",
+    "Unsupported: getConnection(username,password) and getParentLogger (SQLFeatureNotSupportedException).",
+    "Delegation: LogWriter, LoginTimeout, unwrap/isWrapperFor to the underlying unwrapped DataSource if pool exists.",
+    "MXBean setters (metric registry, metrics tracker factory, health check): allowed once after start; second set throws IllegalStateException.",
+    "isRunning() relies on HikariPool.POOL_NORMAL; getHikariPoolMXBean() returns pool; getHikariConfigMXBean() returns this.",
+    "evictConnection() only acts on Hikari-managed connections (class name starts with com.zaxxer.hikari).",
+    "close(): idempotent via AtomicBoolean, shuts down pool with logging; interrupts are caught and the thread is re-interrupted.",
+    "Thread-safety: volatile pool field, AtomicBoolean isShutdown, synchronized lazy init."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.pool.HikariPool (pool lifecycle, getConnection, shutdown, poolState)",
+    "com.zaxxer.hikari.HikariConfig (configuration, validate, copyStateTo, seal)",
+    "HikariConfigMXBean and HikariPoolMXBean (management and monitoring exposure)",
+    "Metrics integration: MetricsTrackerFactory and metric/health registries",
+    "javax.sql.DataSource compatibility and delegation to unwrapped vendor DataSource",
+    "Exception handling: PoolInitializationException -> SQLException passthrough",
+    "Lifecycle utilities: isRunning, evictConnection, close, isClosed",
+    "Logging via SLF4J for start/shutdown"
+  ]
+}

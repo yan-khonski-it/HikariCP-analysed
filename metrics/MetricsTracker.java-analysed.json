@@ -1,0 +1,15 @@
+{
+  "ShortSummary": "Deprecated, empty MetricsTracker class implementing IMetricsTracker; retained for backward compatibility and notes realtime-only support.",
+  "Summary": "MetricsTracker is a deprecated placeholder in com.zaxxer.hikari.metrics that implements IMetricsTracker but contains no logic. The comment states it only supports realtime (not historical) metrics, suggesting it existed for older APIs and should be replaced by current IMetricsTracker implementations.",
+  "MostImportantThings": [
+    "Class is annotated @Deprecated and contains no methods or fields.",
+    "Implements IMetricsTracker, implying reliance on interface defaults (if any).",
+    "Explicitly indicates support for realtime metrics only, not historical.",
+    "Intended mainly for backward compatibility; migrate to newer metrics integrations."
+  ],
+  "RelatedFunctionality": [
+    "IMetricsTracker (current interface to implement)",
+    "com.zaxxer.hikari.metrics package",
+    "HikariCP metrics integrations (e.g., Dropwizard/Codahale or Micrometer, if present in the project)"
+  ]
+}

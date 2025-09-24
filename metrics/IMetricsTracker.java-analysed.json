@@ -1,0 +1,17 @@
+{
+  "ShortSummary": "SPI for tracking HikariCP connection-pool metrics with no-op defaults.",
+  "Summary": "IMetricsTracker is a pluggable interface (extends AutoCloseable) that HikariCP calls to report key pool events. It provides default no-op methods so implementations can override only what they need. It captures timings for connection creation, acquisition, usage, and records timeouts; close() allows cleanup of metric resources.",
+  "MostImportantThings": [
+    "Interface methods are no-op defaults; implementers override to emit metrics.",
+    "Time units: creation and usage are in milliseconds; acquisition is in nanoseconds.",
+    "recordConnectionTimeout() is for incrementing a timeout counter.",
+    "Designed to be called by the pool on critical lifecycle events; must be lightweight and thread-safe.",
+    "close() is provided for resource cleanup/unregistration."
+  ],
+  "RelatedFunctionality": [
+    "MetricsTrackerFactory (factory to supply an IMetricsTracker per pool) [common in HikariCP]",
+    "Integration with metrics libraries (e.g., Dropwizard/Codahale, Micrometer, Prometheus) via concrete implementations",
+    "HikariPool/HikariDataSource invoking tracker hooks on connection lifecycle events",
+    "HikariConfig settings related to metrics/tracker registration"
+  ]
+}

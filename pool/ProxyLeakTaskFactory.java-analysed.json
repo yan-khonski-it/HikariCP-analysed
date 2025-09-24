@@ -1,0 +1,18 @@
+{
+  "ShortSummary": "Factory that creates and schedules ProxyLeakTask instances for PoolEntry using a ScheduledExecutorService; disabled when leakDetectionThreshold is 0.",
+  "Summary": "ProxyLeakTaskFactory encapsulates leak-detection task creation and scheduling. If the leakDetectionThreshold is zero, it returns a NO_LEAK sentinel; otherwise it creates a ProxyLeakTask bound to a PoolEntry and schedules it with the provided ScheduledExecutorService. The threshold can be updated at runtime.",
+  "MostImportantThings": [
+    "Leak detection can be toggled via leakDetectionThreshold; 0 disables and returns ProxyLeakTask.NO_LEAK.",
+    "Schedules a new ProxyLeakTask with the injected ScheduledExecutorService and current threshold.",
+    "Supports dynamic updates to the leak detection threshold via updateLeakDetectionThreshold.",
+    "Tightly coupled to PoolEntry and ProxyLeakTask; relies on ProxyLeakTask.schedule(executor, threshold).",
+    "Package-private and mutable without explicit synchronization; thread-safety/visibility of updates may depend on external usage."
+  ],
+  "RelatedFunctionality": [
+    "ProxyLeakTask (including NO_LEAK and schedule method)",
+    "PoolEntry (represents a pooled connection/resource)",
+    "HikariConfig.leakDetectionThreshold (configuration source)",
+    "HikariPool / internal pool scheduler (provides ScheduledExecutorService)",
+    "Leak detection/reporting feature in HikariCP"
+  ]
+}

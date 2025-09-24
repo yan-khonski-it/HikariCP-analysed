@@ -1,0 +1,24 @@
+{
+  "ShortSummary": "JMX MXBean interface exposing runtime-configurable HikariCP pool settings (timeouts, pool sizing, credentials, catalog, name).",
+  "Summary": "HikariConfigMXBean defines JMX-accessible getters/setters to view and tune a HikariCP pool at runtime. It controls connection/validation/idle timeouts, leak detection threshold, maximum connection lifetime, minimumIdle and maximumPoolSize, and allows updating authentication (username/password/credentials) for DataSource-based pools (affects new connections only). It also exposes the pool name and allows setting a default catalog (should only be changed while the pool is suspended and connections evicted). Time-related values are in milliseconds; specific 0 values disable certain behaviors.",
+  "MostImportantThings": [
+    "All timeouts are in milliseconds.",
+    "connectionTimeout: max wait for getConnection() before SQLException.",
+    "validationTimeout: max wait to validate a connection as alive.",
+    "idleTimeout: max idle time before retirement (approx +0–30s variance); 0 disables idle eviction.",
+    "leakDetectionThreshold: logs potential leak if a connection is out of the pool longer than this; 0 disables.",
+    "maxLifetime: retire connections after this age; never while in-use (retired when they become idle).",
+    "minimumIdle: target minimum idle connections; maximumPoolSize: hard cap on total (idle + in-use).",
+    "When at max pool size and no idle connections, getConnection() blocks up to connectionTimeout.",
+    "setUsername/setPassword/setCredentials apply only to DataSource-based connections and only affect new connections.",
+    "Catalog changes should be done only while the pool is suspended and after evicting connections."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.HikariConfig",
+    "com.zaxxer.hikari.HikariDataSource",
+    "com.zaxxer.hikari.HikariPoolMXBean",
+    "com.zaxxer.hikari.util.Credentials",
+    "javax.sql.DataSource#getConnection",
+    "JMX/MBeans (javax.management)"
+  ]
+}

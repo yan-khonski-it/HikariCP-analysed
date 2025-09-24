@@ -1,0 +1,21 @@
+{
+  "ShortSummary": "Micrometer-backed IMetricsTracker for HikariCP that registers timers, counters, and gauges per pool and cleans them up on close.",
+  "Summary": "MicrometerMetricsTracker integrates HikariCP pool metrics with Micrometer. It records acquire, usage, and creation timings, counts connection timeouts, and exposes gauges for total/idle/active connections, pending threads, and min/max sizes. Metrics are named with the 'hikaricp' prefix, tagged by pool, configurable via MeterFilter (e.g., percentiles), and removed from the MeterRegistry when the tracker is closed.",
+  "MostImportantThings": [
+    "Metric name prefix: 'hikaricp' with pool tag key 'pool'.",
+    "Timers: acquire (nanos), usage (millis), creation (millis).",
+    "Counter: total connection timeouts.",
+    "Gauges: total, idle, active, pending threads, max, min connections sourced from PoolStats.",
+    "Strong reference to PoolStats to keep gauge functions valid.",
+    "Metrics registered in constructor and explicitly removed in close().",
+    "Configurable distribution stats (e.g., percentiles) via MeterFilter on names starting with the prefix.",
+    "Implements IMetricsTracker methods to record events with appropriate time units."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.metrics.IMetricsTracker",
+    "com.zaxxer.hikari.metrics.PoolStats",
+    "io.micrometer.core.instrument.MeterRegistry, Timer, Counter, Gauge",
+    "io.micrometer.core.instrument.config.MeterFilter and DistributionStatisticConfig for percentiles",
+    "HikariCP metrics integration via MetricsTrackerFactory (e.g., MicrometerMetricsTrackerFactory in the project)"
+  ]
+}

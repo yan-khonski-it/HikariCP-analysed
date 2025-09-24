@@ -1,0 +1,20 @@
+{
+  "ShortSummary": "Abstract HikariCP proxy for java.sql.DatabaseMetaData that wraps delegate metadata and ensures returned ResultSets (and their Statements) are proxied.",
+  "Summary": "ProxyDatabaseMetaData holds a ProxyConnection and a delegate DatabaseMetaData. For metadata methods that return a ResultSet, it delegates the call, retrieves the originating Statement, wraps it via ProxyFactory (if present), and returns a proxied ResultSet. getConnection returns the ProxyConnection. It provides proper isWrapperFor/unwrap behavior and a checkException hook via the connection.",
+  "MostImportantThings": [
+    "Wraps ResultSets (and their Statements) from DatabaseMetaData to HikariCP proxies via ProxyFactory.",
+    "Maintains association with the ProxyConnection; getConnection returns the proxy, not the raw JDBC connection.",
+    "Consistent wrapping across many metadata queries: tables, columns, keys, indexes, functions, etc.",
+    "unwrap/isWrapperFor delegate to the underlying DatabaseMetaData when appropriate.",
+    "checkException funnels SQLExceptions through ProxyConnection for pool-aware handling."
+  ],
+  "RelatedFunctionality": [
+    "ProxyConnection",
+    "ProxyStatement",
+    "ProxyFactory.getProxyStatement(...)",
+    "ProxyFactory.getProxyResultSet(...)",
+    "JDBC DatabaseMetaData APIs (ResultSet-returning methods)",
+    "Resource management/leak detection/tracking in HikariCP",
+    "toString identifies proxy and wrapped delegate"
+  ]
+}

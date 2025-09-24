@@ -1,0 +1,25 @@
+{
+  "ShortSummary": "Hibernate 4.3 ConnectionProvider backed by HikariCP; deprecated for Hibernate versions 4.3.6 and newer.",
+  "Summary": "Provides a Hibernate ConnectionProvider that configures a HikariDataSource from Hibernate properties (via HikariConfigurationUtil), supplies JDBC Connections from the pool, and manages lifecycle (closeConnection, stop). It supports unwrapping to ConnectionProvider, itself, and DataSource. Aggressive release is not supported. Logs a deprecation warning for Hibernate >= 4.3.6 advising use of org.hibernate.hikaricp.internal.HikariCPConnectionProvider.",
+  "MostImportantThings": [
+    "Deprecated for Hibernate 4.3.6+; use org.hibernate.hikaricp.internal.HikariCPConnectionProvider instead.",
+    "configure(Map): loads HikariConfig via HikariConfigurationUtil and initializes HikariDataSource; wraps failures in HibernateException.",
+    "getConnection(): delegates to HikariDataSource#getConnection (returns null if not configured).",
+    "closeConnection(Connection): simply calls conn.close(); stop(): closes the HikariDataSource.",
+    "supportsAggressiveRelease(): returns false.",
+    "unwrap/isUnwrappableAs: supports ConnectionProvider, HikariConnectionProvider, and DataSource; otherwise throws UnknownUnwrapTypeException."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.HikariConfig",
+    "com.zaxxer.hikari.HikariDataSource",
+    "com.zaxxer.hikari.hibernate.HikariConfigurationUtil",
+    "org.hibernate.engine.jdbc.connections.spi.ConnectionProvider",
+    "org.hibernate.service.spi.Configurable",
+    "org.hibernate.service.spi.Stoppable",
+    "javax.sql.DataSource",
+    "org.hibernate.Version",
+    "org.hibernate.hikaricp.internal.HikariCPConnectionProvider",
+    "org.slf4j.Logger",
+    "org.slf4j.LoggerFactory"
+  ]
+}

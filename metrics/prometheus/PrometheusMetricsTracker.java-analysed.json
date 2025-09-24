@@ -1,0 +1,20 @@
+{
+  "ShortSummary": "Prometheus-backed IMetricsTracker for HikariCP that records connection metrics per pool and registers them once per CollectorRegistry.",
+  "Summary": "Implements IMetricsTracker to expose HikariCP metrics to Prometheus using a Counter and Summaries labeled by pool name. Metrics are created statically and registered lazily per CollectorRegistry (deduplicated via a concurrent map). Observations include connection acquisition time (nanos), usage time (millis), creation time (millis), and a timeout counter. On close, the pool’s labeled metrics are removed and the HikariCPCollector is updated. Note: the class-level usage snippet appears to reference a tracker where a factory is typically expected (potential inconsistency).",
+  "MostImportantThings": [
+    "Metrics exposed: Counter hikaricp_connection_timeout_total; Summaries hikaricp_connection_acquired_nanos, hikaricp_connection_usage_millis, hikaricp_connection_creation_millis.",
+    "All metrics are labeled by pool (label \"pool\") and use child metrics per pool instance.",
+    "Summaries configured with quantiles: 0.5/0.05, 0.95/0.01, 0.99/0.001; maxAge 5 minutes; 5 age buckets.",
+    "Registration is performed once per CollectorRegistry using a concurrent map to avoid duplicate registration.",
+    "recordConnectionAcquiredNanos/UsageMillis/CreatedMillis observe to respective summaries; recordConnectionTimeout increments counter.",
+    "close() removes the pool’s labels from all metrics and calls hikariCPCollector.remove(poolName).",
+    "Thread-safe static metric definitions; per-instance children bound in constructor."
+  ],
+  "RelatedFunctionality": [
+    "PrometheusMetricsTrackerFactory (provides RegistrationStatus and expected factory usage with HikariConfig).",
+    "HikariCPCollector.remove(String poolName) for pool-level gauge cleanup.",
+    "io.prometheus.client: CollectorRegistry, Counter, Summary.",
+    "HikariCP IMetricsTracker interface methods invoked by pool events.",
+    "HikariConfig.setMetricsTrackerFactory(...) (usage; comment in file may be inconsistent by using tracker instead of factory)."
+  ]
+}

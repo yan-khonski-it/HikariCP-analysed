@@ -1,0 +1,26 @@
+{
+  "ShortSummary": "Represents a pooled JDBC Connection in HikariCP, managing its lifecycle, state, and associated tasks within the ConcurrentBag.",
+  "Summary": "PoolEntry wraps a JDBC Connection and implements IConcurrentBagEntry for CAS-based state management in HikariCP's ConcurrentBag. It tracks access/borrow times, open statements, and connection flags (readOnly/autoCommit). It creates proxy connections (for leak detection and state isolation), delegates state reset/closure to HikariPool, and handles scheduled end-of-life and keepalive tasks. On close, it cancels tasks, nulls references, and returns the raw Connection for final disposal. Note: lastBorrowed is maintained elsewhere.",
+  "MostImportantThings": [
+    "Implements IConcurrentBagEntry with AtomicIntegerFieldUpdater for lock-free state changes (IN_USE, NOT_IN_USE, RESERVED, REMOVED).",
+    "Recycles entries back to the pool and updates lastAccessed.",
+    "Creates proxy connections with ProxyFactory and leak detection support.",
+    "Delegates connection state reset to HikariPool based on dirtyBits.",
+    "Supports eviction and closure via HikariPool with a reason.",
+    "Cancels end-of-life and keepalive ScheduledFuture tasks on close, logging if cancellation fails.",
+    "Tracks lastAccessed and lastBorrowed (the latter set externally) for diagnostics/timeouts.",
+    "Maintains a FastList of open Statements tied to the proxy.",
+    "Remembers initial readOnly and autoCommit to enforce/reset on reuse.",
+    "Eviction mark (evict flag) can force closure despite normal lifecycle."
+  ],
+  "RelatedFunctionality": [
+    "HikariPool.recycle, closeConnection, resetConnectionState",
+    "ConcurrentBag and IConcurrentBagEntry state management",
+    "ProxyFactory, ProxyConnection, ProxyLeakTask",
+    "ClockSource (currentTime, elapsedMillis, elapsedDisplayString)",
+    "FastList<Statement> tracking",
+    "Scheduled end-of-life and keepalive tasks",
+    "SLF4J logging for task cancellation anomalies",
+    "JDBC Connection and Statement lifecycle"
+  ]
+}

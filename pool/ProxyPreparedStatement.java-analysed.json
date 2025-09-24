@@ -1,0 +1,17 @@
+{
+  "ShortSummary": "HikariCP proxy for PreparedStatement that marks the connection as transaction-dirty before execution and proxies ResultSets.",
+  "Summary": "ProxyPreparedStatement extends ProxyStatement and implements PreparedStatement, delegating core execution methods to the underlying PreparedStatement. Before each execute, executeQuery, executeUpdate, or executeLargeUpdate call, it marks the ProxyConnection's commit state as dirty. executeQuery additionally wraps the returned ResultSet with a proxy via ProxyFactory to enable pool-level tracking/management.",
+  "MostImportantThings": [
+    "Constructed with a ProxyConnection and a delegate PreparedStatement.",
+    "Overrides execute, executeQuery, executeUpdate, executeLargeUpdate.",
+    "Calls connection.markCommitStateDirty() before each execution to reflect transactional changes.",
+    "executeQuery wraps the ResultSet using ProxyFactory.getProxyResultSet(connection, this, resultSet).",
+    "Integrates with HikariCP's proxy infrastructure by extending ProxyStatement and implementing PreparedStatement."
+  ],
+  "RelatedFunctionality": [
+    "ProxyStatement (base class behaviors and tracking).",
+    "ProxyConnection.markCommitStateDirty (transaction/commit state management).",
+    "ProxyFactory.getProxyResultSet (ResultSet proxying and resource tracking).",
+    "HikariCP connection pooling and statement/result-set lifecycle management."
+  ]
+}

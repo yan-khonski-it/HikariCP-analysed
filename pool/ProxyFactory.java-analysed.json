@@ -1,0 +1,21 @@
+{
+  "ShortSummary": "Factory for creating HikariCP JDBC proxy objects; method bodies are injected at build time via Javassist.",
+  "Summary": "Final, uninstantiable class exposing package-private static methods to create proxies for Connection, Statement (Prepared/Callable), ResultSet, and DatabaseMetaData. In source form these methods throw IllegalStateException because actual implementations are bytecode-injected by JavassistProxyFactory during the CLI build. Integrates with PoolEntry, ProxyLeakTask, and FastList to manage pool state, leak detection, and open statement tracking, including default readOnly/autoCommit states.",
+  "MostImportantThings": [
+    "All factory methods are stubs; real bodies are injected by JavassistProxyFactory at build time.",
+    "Running without the CLI build or without target/classes will throw IllegalStateException.",
+    "Creates proxies for core JDBC interfaces: Connection, Statement, PreparedStatement, CallableStatement, ResultSet, DatabaseMetaData.",
+    "Coordinates with PoolEntry (pool state), ProxyLeakTask (leak detection), and FastList (open statement tracking).",
+    "Class is final with a private constructor; methods are package-private static.",
+    "Purpose: efficient proxying for HikariCP without runtime reflection overhead."
+  ],
+  "RelatedFunctionality": [
+    "JavassistProxyFactory (build-time bytecode injection)",
+    "ProxyConnection, ProxyStatement, ProxyResultSet (proxy implementations)",
+    "PoolEntry (connection pool state)",
+    "ProxyLeakTask (connection/statement leak detection)",
+    "FastList (tracking open Statements)",
+    "HikariCP pooling and proxy infrastructure",
+    "JDBC interface wrapping and state management (readOnly, autoCommit)"
+  ]
+}

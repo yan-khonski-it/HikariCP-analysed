@@ -1,0 +1,21 @@
+{
+  "ShortSummary": "Schedules and executes a leak-detection task for HikariCP connections; logs a trimmed stack trace if a connection isn't closed before the configured threshold and notes if a previously leaked connection is later returned.",
+  "Summary": "ProxyLeakTask captures the creating thread and connection identity when instantiated from a PoolEntry. It schedules itself via a ScheduledExecutorService for the configured leakDetectionThreshold. On execution, it flags the connection as leaked, trims the first 5 frames from the captured Exception's stack trace to reduce noise, and logs a WARN with the connection name, thread, and stack trace. If the connection is closed before the timeout, cancel() prevents execution; if the task already ran, cancel() logs that the connection was returned (unleaked). A NO_LEAK singleton provides no-op behavior when leak detection is disabled. Minor assumption: stack trace length exceeds 5.",
+  "MostImportantThings": [
+    "Purpose: detect and report JDBC connection leaks in HikariCP after a time threshold.",
+    "Scheduling: uses ScheduledExecutorService; run() logs WARN on timeout.",
+    "Cancellation: cancel() stops the task; if already reported, logs INFO that it was returned.",
+    "Stack trace trimming: removes the first 5 frames to reduce internal noise.",
+    "Identity captured: connectionName from PoolEntry.connection.toString() and creating thread name.",
+    "NO_LEAK sentinel: a no-op instance when leak detection is disabled.",
+    "Assumption: captured Exception stack trace length > 5; otherwise trimming could be unsafe."
+  ],
+  "RelatedFunctionality": [
+    "HikariConfig.leakDetectionThreshold",
+    "PoolEntry",
+    "ProxyConnection / Connection proxy",
+    "HikariPool",
+    "ScheduledExecutorService",
+    "SLF4J logging"
+  ]
+}

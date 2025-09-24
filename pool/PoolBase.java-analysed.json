@@ -1,0 +1,28 @@
+{
+  "ShortSummary": "Core base class for HikariCP pools handling DataSource creation, connection setup/validation/reset, network/query timeouts, metrics, JMX, and credential management.",
+  "Summary": "PoolBase encapsulates the mechanics of obtaining and preparing JDBC Connections from a DataSource derived from HikariConfig (via DataSource class, JDBC URL/DriverDataSource, or JNDI). It initializes driver capabilities (isValid/test query, network timeout, transaction isolation), sets connection defaults (readOnly, autoCommit, isolation, catalog, schema), executes optional init SQL, and validates connections. It restores connection state on return to the pool, manages network timeout executors (with a MySQL-specific synchronous workaround), tracks failures and timings, integrates with metrics, and optionally registers JMX MBeans. Credentials come from a HikariCredentialsProvider or config (with a legacy override switch). The class is abstract and defers pooling specifics (e.g., recycle) to subclasses.",
+  "MostImportantThings": [
+    "DataSource initialization paths: DataSource class + properties, JDBC URL via DriverDataSource, or JNDI; sets loginTimeout based on connectionTimeout.",
+    "Connection lifecycle: newConnection() -> setupConnection() -> validation -> resetConnectionState() when returned; detailed logging and safe close.",
+    "Validation strategy: JDBC4 isValid(timeout) if no test query, else executes configured test query; statement query timeout used only if network timeout unsupported.",
+    "Network timeout handling: tri-state detection; uses Executor (cached thread pool) or SynchronousExecutor for MySQL; warns if validationTimeout <1s or non-integer seconds when unsupported.",
+    "State management: restores readOnly, autoCommit, isolation, catalog, schema, network timeout using bit flags from ProxyConnection; debug string builder for changed states.",
+    "Driver capability probing: checks isValid()/test query support and captures default transaction isolation; handles transient SQLState '08' specially.",
+    "Metrics integration: MetricsTrackerDelegate records creation and acquisition timings; NOP delegate when disabled.",
+    "JMX integration: registers/unregisters PoolConfig and Pool MBeans with configurable naming scheme.",
+    "Error tracking: lastConnectionFailure and connectionFailureTimestamp (atomics) guide logging and fail-fast behavior on empty pool.",
+    "Credentials resolution: prefers HikariCredentialsProvider; otherwise config credentials; optional legacy override with username/password via system property."
+  ],
+  "RelatedFunctionality": [
+    "HikariConfig (pool settings, credentials, SQL, timeouts, JMX flags, thread factory).",
+    "HikariPool and PoolEntry (actual pooling, entry lifecycle; PoolBase.newPoolEntry and abstract recycle).",
+    "ProxyConnection DIRTY_BIT_* flags (state tracking for reset).",
+    "IMetricsTracker (metrics backend) and MetricsTrackerDelegate/Nop delegate.",
+    "UtilityElf/PropertyElf/DriverDataSource/Credentials (helpers for isolation, reflection, JDBC URL-based DS, and creds).",
+    "JDBC APIs: Connection, Statement; behaviors around isValid, setNetworkTimeout, setQueryTimeout, isolation, catalog, schema.",
+    "JMX PlatformMBeanServer and ObjectName for MBeans.",
+    "JNDI InitialContext for DataSource lookup.",
+    "System properties: com.zaxxer.hikari.minimumLoginTimeoutSecs, com.zaxxer.hikari.legacy.supportUserPassDataSourceOverride, hikaricp.jmx.register2.0.",
+    "MySQL-specific workaround: SynchronousExecutor for network timeout execution due to known driver issue."
+  ]
+}

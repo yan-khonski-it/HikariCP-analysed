@@ -1,0 +1,19 @@
+{
+  "ShortSummary": "Factory interface for creating IMetricsTracker instances per connection pool using pool name and PoolStats.",
+  "Summary": "Defines a single method, create(poolName, poolStats), to supply an IMetricsTracker for a given HikariCP pool. It decouples metrics integration from the core pool by allowing pluggable tracker implementations.",
+  "MostImportantThings": [
+    "Implements the factory pattern for metrics trackers.",
+    "Method: IMetricsTracker create(String poolName, PoolStats poolStats).",
+    "Trackers are instantiated per pool, identified by poolName.",
+    "PoolStats is provided to feed metrics data into the tracker.",
+    "Used to integrate external metrics systems without coupling to HikariCP internals."
+  ],
+  "RelatedFunctionality": [
+    "IMetricsTracker (metrics interface to implement)",
+    "PoolStats (pool statistics source)",
+    "HikariConfig.setMetricsTrackerFactory(...) (configuration entry point)",
+    "MicrometerMetricsTrackerFactory (common implementation)",
+    "CodahaleMetricsTrackerFactory/Dropwizard (common implementation)",
+    "HikariDataSource/HikariPool (consumers of the factory)"
+  ]
+}

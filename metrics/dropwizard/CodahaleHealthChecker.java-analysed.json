@@ -1,0 +1,19 @@
+{
+  "ShortSummary": "Registers Dropwizard health checks for HikariCP: a connectivity check and an optional 99th-percentile connection-wait check.",
+  "Summary": "CodahaleHealthChecker registers two health checks in a Dropwizard HealthCheckRegistry for a HikariCP pool. ConnectivityHealthCheck tries to get a connection within a configured timeout (connectivityCheckTimeoutMs or connectionTimeout), falling back to 10s if the value is 0/infinite/Integer.MAX_VALUE. Connection99Percent is registered only when expected99thPercentileMs > 0 and a Dropwizard MetricRegistry with a timer named <poolName>.pool.Wait exists; it reports unhealthy if the 99th-percentile wait time (ms) exceeds the threshold.",
+  "MostImportantThings": [
+    "Connectivity timeout: uses healthCheckProperties['connectivityCheckTimeoutMs'] or HikariConfig.connectionTimeout; 0 or Integer.MAX_VALUE -> default 10,000 ms.",
+    "Connectivity check: pool.getConnection(timeout) success = healthy; SQLException = unhealthy.",
+    "99th percentile check requires: expected99thPercentileMs > 0 AND HikariConfig.metricRegistry is a Dropwizard MetricRegistry AND a timer named MetricRegistry.name(poolName, 'pool', 'Wait') exists.",
+    "99th percentile calculation: round(timer.snapshot.99thPercentile) from ns to ms; healthy if <= expected threshold.",
+    "Health check names: <poolName>.pool.ConnectivityCheck and <poolName>.pool.Connection99Percent.",
+    "Relies on Dropwizard Metrics/HealthCheck APIs and HikariCP pool/config integration."
+  ],
+  "RelatedFunctionality": [
+    "HikariConfig.getHealthCheckProperties(): 'connectivityCheckTimeoutMs', 'expected99thPercentileMs'",
+    "HikariConfig.getMetricRegistry() must be a Dropwizard MetricRegistry to enable Connection99Percent",
+    "Timer metric expected: MetricRegistry.name(poolName, 'pool', 'Wait')",
+    "Dropwizard classes: HealthCheck, HealthCheckRegistry, MetricRegistry, Timer",
+    "HikariCP: HikariPool.getConnection(long timeoutMs), connectionTimeout"
+  ]
+}

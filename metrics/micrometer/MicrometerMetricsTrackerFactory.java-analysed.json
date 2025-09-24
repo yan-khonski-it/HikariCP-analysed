@@ -1,0 +1,17 @@
+{
+  "ShortSummary": "Factory that creates Micrometer-based metrics trackers for HikariCP using a provided MeterRegistry.",
+  "Summary": "MicrometerMetricsTrackerFactory implements MetricsTrackerFactory and wires HikariCP pool metrics into Micrometer. It holds a final MeterRegistry and, when asked, creates a MicrometerMetricsTracker for a given pool name and PoolStats, enabling metric registration and reporting via Micrometer.",
+  "MostImportantThings": [
+    "Implements MetricsTrackerFactory for HikariCP's metrics SPI.",
+    "Requires a Micrometer MeterRegistry via constructor; stored as final (thread-safe).",
+    "create(poolName, poolStats) returns a new MicrometerMetricsTracker bound to the registry.",
+    "Integrates HikariCP pool statistics with Micrometer without additional logic in the factory."
+  ],
+  "RelatedFunctionality": [
+    "MicrometerMetricsTracker",
+    "IMetricsTracker",
+    "MetricsTrackerFactory",
+    "PoolStats",
+    "io.micrometer.core.instrument.MeterRegistry"
+  ]
+}

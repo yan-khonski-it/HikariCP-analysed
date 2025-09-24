@@ -1,0 +1,20 @@
+{
+  "ShortSummary": "Prometheus Collector that exposes HikariCP per-pool connection metrics as gauges, sourced from PoolStats and labeled by pool name.",
+  "Summary": "A package-private class extending io.prometheus.client.Collector that aggregates PoolStats across pools and exports six gauge metrics with a single label \"pool\": active, idle, pending threads, total, max, and min connections. It maintains a concurrent map of pool name to PoolStats, supports add/remove of pools, and builds GaugeMetricFamily instances during collect(). Intended to be registered with a Prometheus CollectorRegistry by higher-level HikariCP metrics integration. Note: the usage comment suggests setMetricsTrackerFactory(new HikariCPCollector()), but this class does not implement MetricsTrackerFactory (likely handled by another class).",
+  "MostImportantThings": [
+    "Exports these gauges (prefixed hikaricp_): active_connections, idle_connections, pending_threads, connections (total), max_connections, min_connections.",
+    "All metrics have a single label: \"pool\" (the pool name).",
+    "Thread-safe management of pools via ConcurrentHashMap; add(name, PoolStats) and remove(name).",
+    "collect() constructs GaugeMetricFamily for each metric using PoolStats getters.",
+    "Designed to be registered with a Prometheus CollectorRegistry; a higher-level factory likely wires this into HikariConfig.",
+    "Relies on com.zaxxer.hikari.metrics.PoolStats for metric values."
+  ],
+  "RelatedFunctionality": [
+    "com.zaxxer.hikari.metrics.PoolStats",
+    "io.prometheus.client.Collector",
+    "io.prometheus.client.GaugeMetricFamily",
+    "io.prometheus.client.CollectorRegistry",
+    "HikariConfig.setMetricsTrackerFactory (integration point; actual factory likely PrometheusMetricsTrackerFactory or similar)",
+    "Prometheus HTTP export (e.g., io.prometheus.client.exporter.HTTPServer) for scraping"
+  ]
+}
